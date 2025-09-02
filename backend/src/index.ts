@@ -15,9 +15,11 @@ connectDB();
 // Routes
 import authRoutes from "./routes/auth";
 import noteRoutes from "./routes/notes";
-
+import otpRoutes from "./routes/otp"
+import verifyOtpRoutes from "./routes/verifyotp";
 app.use("/auth", authRoutes);
 app.use("/notes", noteRoutes);
-
+app.use("/api/send-otp",otpRoutes)
+app.use("/api/verify-otp",verifyOtpRoutes)
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
