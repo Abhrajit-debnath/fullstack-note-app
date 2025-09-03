@@ -63,7 +63,7 @@ export default function Signin() {
 
         try {
             setOtpSentLoading(true);
-            const res = await axios.post("http://localhost:5000/api/send-otp", { email, mode: "signin" });
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/send-otp`, { email, mode: "signin" });
             if (res.data.success) {
                 setOtpSent(true);
                 setOtpExpired(false);
@@ -84,7 +84,7 @@ export default function Signin() {
         if (!user) return;
         try {
             setOtpVerifyLoading(true);
-            const res = await axios.post("http://localhost:5000/api/verify-otp", { 
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/verify-otp`, { 
                 email: user.email, 
                 otp: otpValue,
                 mode:"signin"

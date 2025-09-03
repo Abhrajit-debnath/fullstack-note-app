@@ -63,7 +63,7 @@ export default function Signup() {
         setUserdetails({ email, name, dateofbirth });
         setotpSentloading(true);
         try {
-            const res = await axios.post("http://localhost:5000/api/send-otp", { email, mode: "signup" });
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/send-otp`, { email, mode: "signup" });
             if (res.data.success) {
                 setOtpSent(true);
                 setOtpExpired(false);
@@ -87,7 +87,7 @@ export default function Signup() {
         if (!user) return;
         try {
             setOtpVerifyLoading(true);
-            const res = await axios.post("http://localhost:5000/api/verify-otp", { 
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/verify-otp`, { 
                 email: user.email, 
                 otp: otpValue,
                 dob: user.dateofbirth,
