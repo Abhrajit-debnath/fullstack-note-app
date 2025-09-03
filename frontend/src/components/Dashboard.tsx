@@ -27,7 +27,7 @@ export default function Dashboard() {
     if (!user?.uid) return 
 
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/notes?uid=${user.uid}`)
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/notes?uid=${user.uid}`)
       if (res.data.success) {
         setNotes(res.data.notes || [])
       }
