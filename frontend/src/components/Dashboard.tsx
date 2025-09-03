@@ -27,7 +27,7 @@ export default function Dashboard() {
     if (!user?.uid) return 
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/notes?uid=${user.uid}`)
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/notes?uid=${user.uid}`)
       if (res.data.success) {
         setNotes(res.data.notes || [])
       }
@@ -60,7 +60,7 @@ export default function Dashboard() {
 const handleDeleteNote = async (id?: string) => {
   if (!id) return;
   try {
-    await axios.delete(`http://localhost:5000/api/notes/${id}`);
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/notes/${id}`);
     setNotes(prev => prev.filter(n => n._id !== id));
     fetchNotes()
   } catch (error) {
@@ -71,7 +71,7 @@ const handleDeleteNote = async (id?: string) => {
       if (!newNote.trim() || !user?.uid) return;
       
       try {
-        const res = await axios.post("http://localhost:5000/api/notes", {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/notes`, {
           uid: user.uid,
           content: newNote,
        

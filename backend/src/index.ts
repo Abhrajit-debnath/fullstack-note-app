@@ -17,11 +17,9 @@ app.use(express.json());
 connectDB();
 
 // Routes
-import authRoutes from "./routes/auth";
 import noteRoutes from "./routes/notes";
 import otpRoutes from "./routes/otp"
 import verifyOtpRoutes from "./routes/verifyotp";
-app.use("/auth", authRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/send-otp",otpRoutes)
 app.use("/api/verify-otp",verifyOtpRoutes)
