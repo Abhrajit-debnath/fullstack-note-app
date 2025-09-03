@@ -6,7 +6,7 @@ import connectDB from "./config/db";
 dotenv.config();
 const app = express();
 app.use(cors({
-    origin: "https://fullstack-note-app-95h3.onrender.com",
+    origin: "https://fullstack-note-app-olive.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }));
