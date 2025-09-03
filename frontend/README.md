@@ -1,69 +1,113 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 📝 HD Notes App
 
-Currently, two official plugins are available:
+Welcome to the HD Notes App — a fullstack note-taking application built with React, Node.js, and Firebase. Users can sign up using email + OTP or Google, create and delete notes, and enjoy a clean, mobile-friendly interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was built with love (and TypeScript) to be fast, secure, and easy to use.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 🔐 **Authentication** via Firebase (Email/OTP + Google Sign-In)
+- 🧾 **Note Management** — create and delete personal notes
+- 📱 **Responsive Design** using TailwindCSS
+- 🧠 **Error Handling** with toast notifications
+- 🔒 **JWT Authorization** for secure backend access
+- ☁️ **Cloud Deployment** ready
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧰 Tech Stack
+
+**Frontend**  
+- React + TypeScript  
+- Vite  
+- TailwindCSS  
+- Firebase Auth  
+- React Hook Form  
+- React Hot Toast  
+
+**Backend**  
+- Node.js + TypeScript  
+- Express  
+- Firebase Admin SDK  
+- MongoDB (via Mongoose)  
+- dotenv + cors  
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/your-username/hd-notes-app.git
+cd hd-notes-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Set up Firebase
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Create a Firebase project
+- Enable Email/Password and Google sign-in
+- Add your Firebase config to the frontend (`.env` file)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+...
 ```
+
+- Add Firebase Admin credentials to the backend (`.env` file)
+
+```env
+GOOGLE_APPLICATION_CREDENTIALS=./firebase-adminsdk.json
+MONGO_URI=your_mongodb_uri
+PORT=5000
+```
+
+### 3. Install dependencies
+
+#### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+#### Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+---
+
+## 🧪 API Overview
+
+| Endpoint        | Method | Description                  |
+|----------------|--------|------------------------------|
+| `/signup`       | POST   | Sign up with email/OTP       |
+| `/login`        | POST   | Log in with email or Google  |
+| `/notes`        | GET    | Fetch user notes             |
+| `/notes`        | POST   | Create a new note            |
+| `/notes/:id`    | DELETE | Delete a note                |
+
+All protected routes require a valid Firebase JWT in the `Authorization` header.
+
+---
+
+---
+
+## 🌐 Deployment
+
+- **Frontend**: Vercel  
+- **Backend**: Railway  
+- **Database**: MongoDB Atlas  
+
+Once deployed, share the live URL here.
+
+---
