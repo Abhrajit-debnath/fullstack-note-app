@@ -223,7 +223,7 @@ import type { SubmitHandler } from "react-hook-form";
 import logo from '../assets/logo.png';
 import Bg from '../assets/bg.jpg';
 import { Link } from "react-router-dom";
-import { EyeOff } from 'lucide-react';
+import { EyeOff,Eye  } from 'lucide-react';
 import axios from "axios";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../firebase";
@@ -267,6 +267,7 @@ export default function Signup() {
     const [otpSent, setOtpSent] = useState(false);
     const [otpExpired, setOtpExpired] = useState(false);
     const [otpValue, setOtpValue] = useState("");
+    const [otpVisible, setotpVisible] = useState(true);
     const [user, setUserdetails] = useState<{ email: string, name: string, dateofbirth: Date } | null>(null);
 
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
@@ -398,10 +399,11 @@ export default function Signup() {
                             <input
                                 value={otpValue}
                                 onChange={(e) => setOtpValue(e.target.value)}
-                                type="text"
+                                type={otpVisible ? "text" : "password"}
                                 placeholder="OTP"
                                 className="w-full border-2 rounded-lg px-3 py-3 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
+                            { otpVisible ? <button className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><Eye className="text-gray-500"/></button> :  <button className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><EyeOff className="text-gray-500" /></button>}
                             <OtpTimer duration={300} onExpire={() => setOtpExpired(true)} />
                         </div>
                     )}

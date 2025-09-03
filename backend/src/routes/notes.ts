@@ -36,4 +36,24 @@ try {
 
 });
 
+
+router.delete("/:id",async(req,res)=>{
+  const {id} = req.params
+  if (!id) {
+    return res.status(400).json({ success: false, message: "Note id required" });
+  }
+
+  try {
+    const deleted = await Note.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: "Note not found" });
+    }
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting note:", error);
+    return res.status(500).json({ success: false, message: "Failed to delete note" });
+  }
+  
+})
+
 export default router;

@@ -13,8 +13,9 @@ export default function Dashboard() {
  
   
   type Note = {
-    uid:string,
-    content:string,
+    _id?: string,
+    uid: string,
+    content: string,
   }
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState("");
@@ -56,8 +57,15 @@ export default function Dashboard() {
         }
     }
 
-const handelDeletenote=()=>{
-  
+const handleDeleteNote = async (id?: string) => {
+  if (!id) return;
+  try {
+    await axios.delete(`http://localhost:5000/api/notes/${id}`);
+    setNotes(prev => prev.filter(n => n._id !== id));
+    fetchNotes()
+  } catch (error) {
+    console.error(error);
+  }
 }
     const handleCreateNote = async () => {
       if (!newNote.trim() || !user?.uid) return;
@@ -128,10 +136,13 @@ const handelDeletenote=()=>{
 
      {
       notes.length > 0 ? notes.map((note, index)=>{
+        console.log(note);
         return (
+        
+          
           <div key={index} className="flex justify-between items-center bg-white shadow rounded-md p-3 mb-3">
           <span>{note.content}</span>
-          <button onClick={handelDeletenote}><Trash className="text-black-500 hover:text-red-700 cursor-pointer" /></button>
+          <button onClick={()=>handleDeleteNote(note._id)}><Trash className="text-black-500 hover:text-red-700 cursor-pointer" /></button>
         </div>
         )
       }) : <div className="text-gray-500 text-center py-4">No Notes Found</div>
