@@ -73,9 +73,8 @@ export default function Signup() {
                 toast.error("Failed to send OTP");
             }
         } catch (error: any) {
-            toast.error("Send OTP error:", error.response?.data || error.message);
             if (error.response?.data?.message) {
-                toast(error.response.data.message);
+                toast.error(error.response.data.message);
             } else {
                 toast("Failed to send OTP. Please try again.");
             }
