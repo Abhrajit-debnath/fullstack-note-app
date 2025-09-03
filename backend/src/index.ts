@@ -18,7 +18,7 @@ import noteRoutes from "./routes/notes";
 import otpRoutes from "./routes/otp"
 import verifyOtpRoutes from "./routes/verifyotp";
 app.use("/auth", authRoutes);
-app.use("/notes", noteRoutes);
+app.use("/api/notes", noteRoutes);
 app.use("/api/send-otp",otpRoutes)
 app.use("/api/verify-otp",verifyOtpRoutes)
 const PORT = process.env.PORT || 8000;

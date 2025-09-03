@@ -3,7 +3,7 @@ import Dashboard from './components/Dashboard';
 import Signin from './components/Signin'
 import Signup from './components/Signup'
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from './context/Usercontext';
+import { useUser } from './context/UserContext';
 
 function App() {
   const { user, loading } = useUser();

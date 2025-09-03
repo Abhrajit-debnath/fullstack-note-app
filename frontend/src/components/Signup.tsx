@@ -223,6 +223,7 @@ import type { SubmitHandler } from "react-hook-form";
 import logo from '../assets/logo.png';
 import Bg from '../assets/bg.jpg';
 import { Link } from "react-router-dom";
+import { EyeOff } from 'lucide-react';
 import axios from "axios";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../firebase";
@@ -275,7 +276,7 @@ export default function Signup() {
         setUserdetails({ email, name, dateofbirth });
 
         try {
-            const res = await axios.post("http://localhost:5000/api/send-otp", { email });
+            const res = await axios.post("http://localhost:5000/api/send-otp", { email,mode:"signup" });
             if (res.data.success) {
                 setOtpSent(true);
                 setOtpExpired(false);
@@ -301,7 +302,8 @@ export default function Signup() {
                 email: user.email, 
                 otp: otpValue,
                 dob: user.dateofbirth,
-                name: user.name 
+                name: user.name ,
+                mode:"signup"
             });
             
             console.log("Backend response:", res.data);

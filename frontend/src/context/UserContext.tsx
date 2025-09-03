@@ -28,14 +28,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         const docRef = doc(db, "users", firebaseUser.uid);
+        console.log(docRef);
+        
 
                  // 👇 subscribe to user profile
          const unsubscribeDoc = onSnapshot(docRef, (docSnap) => {
            if (docSnap.exists()) {
-             setUser({ uid: firebaseUser.uid, ...docSnap.data() } as UserData);
+             const userData = { uid: firebaseUser.uid, ...docSnap.data() } as UserData;
+             console.log("User data from Firestore:", userData);
+             setUser(userData);
            } else {
              // fallback to auth data if no profile
-             setUser({ uid: firebaseUser.uid, email: firebaseUser.email || "" });
+             const fallbackUserData = { uid: firebaseUser.uid, email: firebaseUser.email || "" };
+             console.log("Fallback user data:", fallbackUserData);
+             setUser(fallbackUserData);
            }
            setLoading(false);
          }, (error) => {
