@@ -227,6 +227,7 @@ import { EyeOff,Eye  } from 'lucide-react';
 import axios from "axios";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../firebase";
+import toast from "react-hot-toast";
 type Inputs = {
     name: string,
     dateofbirth: Date,
@@ -265,9 +266,11 @@ function OtpTimer({ duration, onExpire }: OtpTimerProps) {
 
 export default function Signup() {
     const [otpSent, setOtpSent] = useState(false);
+    const [otpSentloading, setotpSentloading] = useState(false);
     const [otpExpired, setOtpExpired] = useState(false);
     const [otpValue, setOtpValue] = useState("");
     const [otpVisible, setotpVisible] = useState(true);
+    const [otpVerifyLoading, setOtpVerifyLoading] = useState(false);
     const [user, setUserdetails] = useState<{ email: string, name: string, dateofbirth: Date } | null>(null);
 
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
@@ -275,30 +278,33 @@ export default function Signup() {
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         const { email, name, dateofbirth } = data;
         setUserdetails({ email, name, dateofbirth });
-
+        setotpSentloading(true);
         try {
-            const res = await axios.post("http://localhost:5000/api/send-otp", { email,mode:"signup" });
+            const res = await axios.post("http://localhost:5000/api/send-otp", { email, mode: "signup" });
             if (res.data.success) {
                 setOtpSent(true);
                 setOtpExpired(false);
                 setOtpValue("");
-                console.log("OTP:", res.data.otp); // Only for testing
+                toast.success("OTP Sent")
             } else {
-                alert("Failed to send OTP");
+                toast.error("Failed to send OTP");
             }
         } catch (error: any) {
-            console.error("Send OTP error:", error.response?.data || error.message);
+            toast.error("Send OTP error:", error.response?.data || error.message);
             if (error.response?.data?.message) {
-                alert(error.response.data.message);
+                toast(error.response.data.message);
             } else {
-                alert("Failed to send OTP. Please try again.");
+                toast("Failed to send OTP. Please try again.");
             }
+        } finally {
+            setotpSentloading(false);
         }
     }
 
     const handleVerifyOtp = async () => {
         if (!user) return;
         try {
+            setOtpVerifyLoading(true);
             const res = await axios.post("http://localhost:5000/api/verify-otp", { 
                 email: user.email, 
                 otp: otpValue,
@@ -312,15 +318,17 @@ export default function Signup() {
             if (res.data.success && res.data.token) {
                 console.log("Token received:", res.data.token);
                 await signInWithCustomToken(auth, res.data.token);
-                alert("OTP verified! Signup successful 🚀");
+                toast.success("OTP verified! Signup successful 🚀");
                 setOtpSent(false);
                 setOtpValue("");
             } else {
-                alert(res.data.message || "No token received");
+                toast.error(res.data.message || "No token received");
             }
         } catch (error) {
-            console.error("Error in handleVerifyOtp:", error);
-            alert("Failed to verify OTP. Please try again.");
+            toast.error("Error in handleVerifyOtp:");
+            toast.error("Failed to verify OTP. Please try again.");
+        } finally {
+            setOtpVerifyLoading(false);
         }
     }
 
@@ -401,9 +409,10 @@ export default function Signup() {
                                 onChange={(e) => setOtpValue(e.target.value)}
                                 type={otpVisible ? "text" : "password"}
                                 placeholder="OTP"
+                                disabled = {otpExpired ? true : false}
                                 className="w-full border-2 rounded-lg px-3 py-3 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            { otpVisible ? <button className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><Eye className="text-gray-500"/></button> :  <button className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><EyeOff className="text-gray-500" /></button>}
+                            { otpVisible ? <button type="button" className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><Eye className="text-gray-500"/></button> :  <button type="button" className="absolute right-5 top-4" onClick={()=>setotpVisible(!otpVisible)}><EyeOff className="text-gray-500" /></button>}
                             <OtpTimer duration={300} onExpire={() => setOtpExpired(true)} />
                         </div>
                     )}
@@ -412,25 +421,34 @@ export default function Signup() {
                     {(!otpSent || otpExpired) ? (
                         <button
                             type="submit"
-                            className="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition"
+                            disabled={otpSentloading}
+                            className="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            Get OTP
+                           {otpSentloading && (
+                             <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                           )}
+                           <span>{otpExpired ? "Resend OTP" : "Get OTP"}</span>
                         </button>
                     ) : (
+                        
                         <button
                             type="button"
                             onClick={handleVerifyOtp}
-                            className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition"
+                            disabled={otpVerifyLoading || !otpValue || otpExpired}
+                            className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            Verify OTP
+                            {otpVerifyLoading && (
+                              <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            )}
+                            <span>Verify OTP</span>
                         </button>
                     )}
                 </form>
 
                 {/* Sign In Link */}
-                <p className="text-center lg:text-left text-gray-600 text-sm mt-4">
+                <p className="text-center lg:text-left text-gray-600 text-sm mt-4 lg:text-[16px]">
                     Already have an account?{" "}
-                    <Link to="/login" className="text-blue-500 font-medium hover:underline">
+                    <Link to="/login" className="text-blue-500 font-medium hover:underline lg:text-md">
                         Sign in
                     </Link>
                 </p>

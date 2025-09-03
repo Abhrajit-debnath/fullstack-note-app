@@ -4,6 +4,7 @@ import Signin from './components/Signin'
 import Signup from './components/Signup'
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from './context/UserContext';
+import  { Toaster } from 'react-hot-toast';
 
 function App() {
   const { user, loading } = useUser();
@@ -15,7 +16,10 @@ function App() {
   }
 
   return (
-    <Routes>
+    <>
+    <Toaster position='top-center' reverseOrder={false}/>
+       <Routes>
+      
       {/* If user is logged in → show Dashboard, else redirect to Signup */}
       <Route
         path="/"
@@ -32,6 +36,8 @@ function App() {
         element={user ? <Navigate to="/" replace /> : <Signin />}
       />
     </Routes>
+    </>
+ 
   );
 }
 

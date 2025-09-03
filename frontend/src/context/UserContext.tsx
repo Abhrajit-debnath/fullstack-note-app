@@ -25,40 +25,48 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let unsubscribeDoc: (() => void) | null = null;
+
     const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      // Clean up previous Firestore listener whenever auth state changes
+      if (unsubscribeDoc) {
+        unsubscribeDoc();
+        unsubscribeDoc = null;
+      }
+
       if (firebaseUser) {
         const docRef = doc(db, "users", firebaseUser.uid);
-        console.log(docRef);
-        
 
-                 // 👇 subscribe to user profile
-         const unsubscribeDoc = onSnapshot(docRef, (docSnap) => {
-           if (docSnap.exists()) {
-             const userData = { uid: firebaseUser.uid, ...docSnap.data() } as UserData;
-             console.log("User data from Firestore:", userData);
-             setUser(userData);
-           } else {
-             // fallback to auth data if no profile
-             const fallbackUserData = { uid: firebaseUser.uid, email: firebaseUser.email || "" };
-             console.log("Fallback user data:", fallbackUserData);
-             setUser(fallbackUserData);
-           }
-           setLoading(false);
-         }, (error) => {
-           console.error("Firestore permission error:", error);
-           // Fallback to auth data if Firestore access is denied
-           setUser({ uid: firebaseUser.uid, email: firebaseUser.email || "" });
-           setLoading(false);
-         });
-
-        return () => unsubscribeDoc();
+        // Subscribe to user profile
+        unsubscribeDoc = onSnapshot(
+          docRef,
+          (docSnap) => {
+            if (docSnap.exists()) {
+              const userData = { uid: firebaseUser.uid, ...docSnap.data() } as UserData;
+              setUser(userData);
+            } else {
+              // Fallback to auth data if no profile exists
+              setUser({ uid: firebaseUser.uid, email: firebaseUser.email || "" });
+            }
+            setLoading(false);
+          },
+          (error) => {
+            console.error("Firestore permission error:", error);
+            setUser({ uid: firebaseUser.uid, email: firebaseUser.email || "" });
+            setLoading(false);
+          }
+        );
       } else {
+        // No authenticated user
         setUser(null);
         setLoading(false);
       }
     });
 
-    return () => unsubscribeAuth();
+    return () => {
+      if (unsubscribeDoc) unsubscribeDoc();
+      unsubscribeAuth();
+    };
   }, []);
 
   return (
