@@ -22,7 +22,7 @@ Router.post("/", async (req, res) => {
       .json({ success: false, message: "Email, OTP, and mode are required" });
   }
 
-  // For signup mode, name and dob are required
+ 
   if (mode === "signup" && (!name || !dob)) {
     return res
       .status(400)
@@ -54,7 +54,7 @@ Router.post("/", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    // ✅ OTP is correct
+  
     try {
       let userRecord: any;
 
