@@ -62,7 +62,7 @@ Router.post("/", async (req, res) => {
         // For signin, user must already exist
         try {
           userRecord = await admin.auth().getUserByEmail(email);
-          console.log("✅ User found for signin:", userRecord.uid);
+          console.log("User found for signin:", userRecord.uid);
         } catch (err: any) {
           return res
             .status(400)
@@ -75,7 +75,7 @@ Router.post("/", async (req, res) => {
         // For signup, check if user already exists
         try {
           userRecord = await admin.auth().getUserByEmail(email);
-          console.log("✅ User already exists:", userRecord.uid);
+          console.log("User already exists:", userRecord.uid);
           return res
             .status(400)
             .json({
@@ -89,7 +89,7 @@ Router.post("/", async (req, res) => {
             email,
             displayName: name,
           });
-          console.log("✅ New user created in Auth:", userRecord.uid);
+          console.log(" New user created in Auth:", userRecord.uid);
         }
       }
 
@@ -115,7 +115,7 @@ Router.post("/", async (req, res) => {
 
       // Create custom token for frontend login
       const token = await admin.auth().createCustomToken(userRecord.uid);
-      console.log("✅ Custom token created for UID:", userRecord.uid);
+      console.log("Custom token created for UID:", userRecord.uid);
 
       let profile = null;
       if (mode === "signin") {
@@ -132,7 +132,7 @@ Router.post("/", async (req, res) => {
         profile,
       });
     } catch (err: any) {
-      console.error("🔥 Firebase Auth/Firestore Error:", err.code, err.message);
+      console.error(" Firebase Auth/Firestore Error:", err.code, err.message);
       return res.status(500).json({ success: false, message: err.message });
     }
   } catch (error) {
