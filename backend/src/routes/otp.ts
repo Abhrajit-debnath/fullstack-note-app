@@ -18,7 +18,7 @@ Router.post("/", async (req, res) => {
     try {
       await admin.auth().getUserByEmail(email);
       userExists = true;
-    } catch (err) {
+    } catch (err:any) {
       if (err.code !== "auth/user-not-found") throw err;
     }
 
